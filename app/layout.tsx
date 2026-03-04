@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Grand_Hotel, Lato } from "next/font/google";
 import "./globals.css";
+import Loader from "./components/loader";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const grandHotel = Grand_Hotel({
+  weight: "400",
+  variable: "--font-grand-hotel",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const lato = Lato({
+  weight: ["300", "400", "700"],
+  variable: "--font-lato",
   subsets: ["latin"],
 });
 
@@ -25,8 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${grandHotel.variable} ${lato.variable} antialiased`}
       >
+        <Loader />
         {children}
       </body>
     </html>
