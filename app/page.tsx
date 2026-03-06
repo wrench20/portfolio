@@ -130,90 +130,90 @@ export default function Layers() {
                     <div
                       className="relative group"
                     >
-                    <svg
-                      className="absolute -inset-8 w-[calc(100%+4rem)] h-[calc(100%+4rem)] z-30 pointer-events-none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="-4 -4 110 110"
-                      fill="none"
-                      overflow="visible"
-                    >
-                      <defs>
-                        <linearGradient id="orbit-grad" x1="-4" y1="-4" x2="9" y2="9" gradientUnits="userSpaceOnUse">
-                          <stop offset="0.2" stopColor="#2B7FFF" />
-                          <stop offset="0.5" stopColor="#2B7FFF" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        id="orbit-path"
-                        stroke="rgba(250,225,225,0.15)"
-                        strokeWidth="0.5"
-                        d="M51,1 A50,50 0 1,0 51,101 A50,50 0 1,0 51,1Z"
-                      />
-                      <rect
-                        id="motion-rect"
-                        fill="url(#orbit-grad)"
-                        width="3"
-                        height="3"
-                        x="-1.5"
-                        y="-1.5"
-                        rx="2"
-                      />
-                    </svg>
-
-                    <div className="absolute -inset-6 opacity-[25%] z-0 block">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 rounded-full blur-2xl animate-spin-slower" />
-                      <div className="absolute inset-0 bg-gradient-to-l from-sky-400 via-cyan-400 to-teal-300 rounded-full blur-2xl animate-pulse-slow opacity-50" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-blue-800 via-sky-500 to-teal-200 rounded-full blur-2xl animate-float opacity-50" />
-                    </div>
-
-                    <div className="relative">
-                      <div className="w-64 h-64 sm:w-64 sm:h-64 xl:w-77 xl:h-77 2xl:w-[24.3rem] 2xl:h-[24.3rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
-                        <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
-
-                        {/* Optimized overlay effects - disabled on mobile */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 block" />
-
-                        <img
-                          src="/3.jpeg"
-                          alt="Profile"
-                          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
-                          loading="lazy"
-                          width={1000}
-                          height={1000}
+                      <svg
+                        className="absolute -inset-8 w-[calc(100%+4rem)] h-[calc(100%+4rem)] z-30 pointer-events-none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="-4 -4 110 110"
+                        fill="none"
+                        overflow="visible"
+                      >
+                        <defs>
+                          <linearGradient id="orbit-grad" x1="-4" y1="-4" x2="9" y2="9" gradientUnits="userSpaceOnUse">
+                            <stop offset="0.2" stopColor="#2B7FFF" />
+                            <stop offset="0.5" stopColor="#2B7FFF" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          id="orbit-path"
+                          stroke="rgba(250,225,225,0.15)"
+                          strokeWidth="0.5"
+                          d="M51,1 A50,50 0 1,0 51,101 A50,50 0 1,0 51,1Z"
                         />
-                        {/* 
+                        <rect
+                          id="motion-rect"
+                          fill="url(#orbit-grad)"
+                          width="3"
+                          height="3"
+                          x="-1.5"
+                          y="-1.5"
+                          rx="2"
+                        />
+                      </svg>
+
+                      <div className="absolute -inset-6 opacity-[25%] z-0 block">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 rounded-full blur-2xl animate-spin-slower" />
+                        <div className="absolute inset-0 bg-gradient-to-l from-sky-400 via-cyan-400 to-teal-300 rounded-full blur-2xl animate-pulse-slow opacity-50" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-blue-800 via-sky-500 to-teal-200 rounded-full blur-2xl animate-float opacity-50" />
+                      </div>
+
+                      <div className="relative">
+                        <div className="w-64 h-64 sm:w-64 sm:h-64 xl:w-77 xl:h-77 2xl:w-[24.3rem] 2xl:h-[24.3rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
+                          <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
+
+                          {/* Optimized overlay effects - disabled on mobile */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 block" />
+
+                          <img
+                            src="/3.jpeg"
+                            alt="Profile"
+                            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
+                            loading="lazy"
+                            width={1000}
+                            height={1000}
+                          />
+                          {/* 
                       Advanced hover effects - desktop only */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 hidden sm:block">
-                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                          <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/10 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000 delay-100" />
-                          <div className="absolute inset-0 rounded-full border-8 border-white/10 scale-0 group-hover:scale-100 transition-transform duration-700 animate-pulse-slow" />
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 hidden sm:block">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/10 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000 delay-100" />
+                            <div className="absolute inset-0 rounded-full border-8 border-white/10 scale-0 group-hover:scale-100 transition-transform duration-700 animate-pulse-slow" />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="space-y-4 col-span-2 text-center lg:text-left">
-                  <div
+                  <div className="space-y-4 col-span-2 text-center lg:text-left">
+                    <div
 
-                    className="space-y-2"
-                  >
-                    <p className=" text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
-                      Hi there, I&apos;m
+                      className="space-y-2"
+                    >
+                      <p className=" text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
+                        Hi there, I&apos;m
+                      </p>
+                      <span className="split-text title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
+                        Tebi Njeik
+                      </span>
+                    </div>
+
+
+                    <p
+
+                      className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 lg:text-start"
+                    >
+                      A <span>full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
                     </p>
-                    <span className="split-text title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
-                      Tebi Njeik
-                    </span>
-                  </div>
 
-
-                  <p
-
-                    className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 lg:text-start"
-                  >
-                    A <span>full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
-                  </p>
-
-                  {/* <ul className="flex justify-center md:justify-start mt-5 space-x-5">
+                    {/* <ul className="flex justify-center md:justify-start mt-5 space-x-5">
                     <li>
                       <a
                         href="https://www.linkedin.com/in/tebi-njeik"
@@ -302,6 +302,7 @@ export default function Layers() {
         <div className="section-content">
           <div className="section-inner">
             <h1 className="split-text">ONE</h1>
+           
           </div>
         </div>
       </section>

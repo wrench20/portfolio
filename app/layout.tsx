@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Grand_Hotel, Lato } from "next/font/google";
 import "./globals.css";
 import Loader from "./components/loader";
+import Navbar from "./components/navbar";
 
 const grandHotel = Grand_Hotel({
   weight: "400",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${grandHotel.variable} ${lato.variable} antialiased`}
       >
         <Loader />
+        <Navbar />
         {children}
       </body>
     </html>
