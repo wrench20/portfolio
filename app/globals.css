@@ -76,11 +76,14 @@ nav li a {
 }
 
 .panel {
+  width: 100%;
   height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
 .section {
@@ -616,10 +619,26 @@ button {
 /* panels  */
 
 .panel {
-  min-height: 100vh;
+  height: 100vh;
   padding-left: 0.6rem;
   padding-right: 0.6rem;
   color: var(--dark);
+}
+
+.section-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.section-inner {
+  height: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .panel.light {
@@ -1046,4 +1065,11 @@ code .token.url {
     opacity: 0;
     transform: rotate(45deg) translate(15px, 15px);
   }
+}
+
+/* split text reveal */
+
+.split-text {
+  perspective: 400px;
+  overflow: hidden;
 }

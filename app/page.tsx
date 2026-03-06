@@ -4,9 +4,10 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { SplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
 import GridPattern from './components/gridPattern';
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, SplitText);
 
 export default function Layers() {
   const main = useRef<HTMLElement | null>(null);
@@ -14,24 +15,51 @@ export default function Layers() {
   useGSAP(
     () => {
       const panels = gsap.utils.toArray<HTMLElement>('.panel');
+      const allButLast = panels.slice(0, -1);
 
-      panels.forEach((panel, i) => {
-        if (i === panels.length - 1) return;
+      allButLast.forEach((panel) => {
+        const innerpanel = panel.querySelector('.section-inner') as HTMLElement;
+        if (!innerpanel) return;
 
-        ScrollTrigger.create({
-          trigger: panel,
-          start: 'top top',
-          pin: true,
-          pinSpacing: false,
+        const panelHeight = innerpanel.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const difference = panelHeight - windowHeight;
+
+        const fakeScrollRatio =
+          difference > 0 ? difference / (difference + windowHeight) : 0;
+
+        if (fakeScrollRatio) {
+          panel.style.marginBottom = panelHeight * fakeScrollRatio + 'px';
+        }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: panel,
+            start: 'bottom bottom',
+            end: () =>
+              fakeScrollRatio
+                ? `+=${innerpanel.offsetHeight}`
+                : 'bottom top',
+            pinSpacing: false,
+            pin: true,
+            scrub: true,
+          },
         });
-      });
 
-      ScrollTrigger.create({
-        snap: {
-          snapTo: 1 / (panels.length - 1),
-          duration: { min: 0.2, max: 0.6 },
-          ease: 'power1.inOut',
-        },
+        if (fakeScrollRatio) {
+          tl.to(innerpanel, {
+            yPercent: -100,
+            y: windowHeight,
+            duration: 1 / (1 - fakeScrollRatio) - 1,
+            ease: 'none',
+          });
+        }
+
+        tl.fromTo(
+          panel,
+          { scale: 1, opacity: 1 },
+          { scale: 0.7, opacity: 0.5, duration: 0.9 }
+        ).to(panel, { opacity: 0, duration: 0.1 });
       });
 
       gsap.to('#motion-rect', {
@@ -44,22 +72,64 @@ export default function Layers() {
         ease: 'none',
         repeat: -1,
       });
+
+      panels.forEach((panel, i) => {
+        const targets = panel.querySelectorAll('.split-text');
+        targets.forEach((el) => {
+          const split = SplitText.create(el, { type: 'chars,words' });
+
+          gsap.set(split.chars, {
+            y: 60,
+            opacity: 0,
+            rotateX: -90,
+            transformOrigin: '50% 50% -30px',
+          });
+
+          if (i === 0) {
+            gsap.to(split.chars, {
+              y: 0,
+              opacity: 1,
+              rotateX: 0,
+              duration: 0.8,
+              stagger: 0.04,
+              ease: 'back.out(1.7)',
+              delay: 0.3,
+            });
+          } else {
+            ScrollTrigger.create({
+              trigger: panel,
+              start: 'top 60%',
+              onEnter: () => {
+                gsap.to(split.chars, {
+                  y: 0,
+                  opacity: 1,
+                  rotateX: 0,
+                  duration: 0.8,
+                  stagger: 0.04,
+                  ease: 'back.out(1.7)',
+                });
+              },
+            });
+          }
+        });
+      });
     },
     { scope: main }
   );
 
   return (
     <main ref={main}>
-      <section className="description panel dark relative  overflow-hidden">
+      <section className="description panel dark relative">
         <GridPattern />
-        <div>
-          <div className="flex items-center justify-startsm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2 ">
-            <div className="w-full h-full  mx-auto pt-8 lg:mt-28 sm:pt-12 relative flex justify-start">
-              <div className="flex justify-center flex-col gap-8 lg:grid lg:grid-cols-3  items-center place-items-center ">
-                <div className="flex justify-center col-span-1 items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
-                  <div
-                    className="relative group"
-                  >
+        <div className="section-content">
+          <div className="section-inner">
+            <div className="flex items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2 ">
+              <div className="w-full h-full  mx-auto pt-8 lg:mt-28 sm:pt-12 relative flex justify-start">
+                <div className="flex justify-center flex-col gap-8 lg:grid lg:grid-cols-3  items-center place-items-center ">
+                  <div className="flex justify-center col-span-1 items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
+                    <div
+                      className="relative group"
+                    >
                     <svg
                       className="absolute -inset-8 w-[calc(100%+4rem)] h-[calc(100%+4rem)] z-30 pointer-events-none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -127,12 +197,11 @@ export default function Layers() {
 
                     className="space-y-2"
                   >
-                    <p className="text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
-                      Hi there, I'm
+                    <p className=" text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
+                      Hi there, I&apos;m
                     </p>
-                    <span className="title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
+                    <span className="split-text title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
                       Tebi Njeik
-
                     </span>
                   </div>
 
@@ -141,7 +210,7 @@ export default function Layers() {
 
                     className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 lg:text-start"
                   >
-                    A <span className="">full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
+                    A <span>full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
                   </p>
 
                   {/* <ul className="flex justify-center md:justify-start mt-5 space-x-5">
@@ -217,22 +286,53 @@ export default function Layers() {
                       </a>
                     </li>
                   </ul> */}
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="scroll-down">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         </div>
-        <div className="scroll-down">
-          <span></span>
-          <span></span>
-          <span></span>
+      </section>
+      <section className="panel dark">
+        <div className="section-content">
+          <div className="section-inner">
+            <h1 className="split-text">ONE</h1>
+          </div>
         </div>
       </section>
-      <section className="panel dark">ONE</section>
-      <section className="panel purple">TWO</section>
-      <section className="panel orange">THREE</section>
-      <section className="panel red">FOUR</section>
-      <section className="panel green">FIVE</section>
+      <section className="panel purple">
+        <div className="section-content">
+          <div className="section-inner">
+            <h1 className="split-text">TWO</h1>
+          </div>
+        </div>
+      </section>
+      <section className="panel orange">
+        <div className="section-content">
+          <div className="section-inner">
+            <h1 className="split-text">THREE</h1>
+          </div>
+        </div>
+      </section>
+      <section className="panel red">
+        <div className="section-content">
+          <div className="section-inner">
+            <h1 className="split-text">FOUR</h1>
+          </div>
+        </div>
+      </section>
+      <section className="panel green">
+        <div className="section-content">
+          <div className="section-inner">
+            <h1 className="split-text">FIVE</h1>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
