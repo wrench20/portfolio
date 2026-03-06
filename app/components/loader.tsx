@@ -23,7 +23,7 @@ export default function Loader() {
   useGSAP(
     () => {
       const tl = gsap.timeline({
-        defaults: { duration: 0.8, ease: 'expo.inOut' },
+        defaults: { duration: 0.3, ease: 'expo.inOut' },
         repeat: -1,
       });
 
@@ -36,7 +36,7 @@ export default function Loader() {
         .to('#morph', { morphSVG: '#bulb' })
         .to('#morph', { morphSVG: '#morph' });
 
-      const minDisplayTime = new Promise<void>((r) => setTimeout(r, 6000));
+      const minDisplayTime = new Promise<void>((r) => setTimeout(r, 1000));
       const pageLoaded = new Promise<void>((r) => {
         if (document.readyState === 'complete') r();
         else window.addEventListener('load', () => r(), { once: true });

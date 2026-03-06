@@ -3,9 +3,10 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
+import GridPattern from './components/gridPattern';
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 export default function Layers() {
   const main = useRef<HTMLElement | null>(null);
@@ -32,31 +33,71 @@ export default function Layers() {
           ease: 'power1.inOut',
         },
       });
+
+      gsap.to('#motion-rect', {
+        motionPath: {
+          path: '#orbit-path',
+          align: '#orbit-path',
+          alignOrigin: [0.5, 0.5],
+        },
+        duration: 20,
+        ease: 'none',
+        repeat: -1,
+      });
     },
     { scope: main }
   );
 
   return (
     <main ref={main}>
-      <section className="description panel light">
+      <section className="description panel dark relative  overflow-hidden">
+        <GridPattern />
         <div>
-          <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2 ">
-            <div className="w-full h-full  mx-auto pt-8 lg:mt-28 sm:pt-12 relative flex justify-center">
-              <div className="flex justify-center flex-col-reverse lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center place-content-center ">
-                <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
+          <div className="flex items-center justify-startsm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2 ">
+            <div className="w-full h-full  mx-auto pt-8 lg:mt-28 sm:pt-12 relative flex justify-start">
+              <div className="flex justify-center flex-col gap-8 lg:grid lg:grid-cols-3  items-center place-items-center ">
+                <div className="flex justify-center col-span-1 items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
                   <div
-
                     className="relative group"
                   >
-                    {/* Optimized gradient backgrounds with reduced complexity for mobile */}
+                    <svg
+                      className="absolute -inset-8 w-[calc(100%+4rem)] h-[calc(100%+4rem)] z-30 pointer-events-none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="-4 -4 110 110"
+                      fill="none"
+                      overflow="visible"
+                    >
+                      <defs>
+                        <linearGradient id="orbit-grad" x1="-4" y1="-4" x2="9" y2="9" gradientUnits="userSpaceOnUse">
+                          <stop offset="0.2" stopColor="#2B7FFF" />
+                          <stop offset="0.5" stopColor="#2B7FFF" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        id="orbit-path"
+                        stroke="rgba(250,225,225,0.15)"
+                        strokeWidth="0.5"
+                        d="M51,1 A50,50 0 1,0 51,101 A50,50 0 1,0 51,1Z"
+                      />
+                      <rect
+                        id="motion-rect"
+                        fill="url(#orbit-grad)"
+                        width="3"
+                        height="3"
+                        x="-1.5"
+                        y="-1.5"
+                        rx="2"
+                      />
+                    </svg>
+
                     <div className="absolute -inset-6 opacity-[25%] z-0 block">
-                      <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-indigo-500 to-purple-600 rounded-full blur-2xl animate-spin-slower" />
-                      <div className="absolute inset-0 bg-gradient-to-l from-fuchsia-500 via-rose-500 to-pink-600 rounded-full blur-2xl animate-pulse-slow opacity-50" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-blue-600 via-cyan-500 to-teal-400 rounded-full blur-2xl animate-float opacity-50" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 rounded-full blur-2xl animate-spin-slower" />
+                      <div className="absolute inset-0 bg-gradient-to-l from-sky-400 via-cyan-400 to-teal-300 rounded-full blur-2xl animate-pulse-slow opacity-50" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-blue-800 via-sky-500 to-teal-200 rounded-full blur-2xl animate-float opacity-50" />
                     </div>
 
                     <div className="relative">
-                      <div className="w-72 h-72 sm:w-72 sm:h-72 xl:w-86 xl:h-86  2xl:w-[27rem] 2xl:h-[27rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
+                      <div className="w-64 h-64 sm:w-64 sm:h-64 xl:w-77 xl:h-77 2xl:w-[24.3rem] 2xl:h-[24.3rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
                         <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
 
                         {/* Optimized overlay effects - disabled on mobile */}
@@ -81,29 +122,29 @@ export default function Layers() {
                     </div>
                   </div>
                 </div>
-                <div className="space-y-4 text-center lg:text-left">
+                <div className="space-y-4 col-span-2 text-center lg:text-left">
                   <div
 
                     className="space-y-2"
                   >
-                    <p className="text-3xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
+                    <p className="text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
                       Hi there, I'm
                     </p>
-                    <span className="title relative text-red-500  text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
+                    <span className="title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
                       Tebi Njeik
-                      
+
                     </span>
                   </div>
 
 
                   <p
 
-                    className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-1/2 pb-4 sm:pb-0 lg:text-start"
+                    className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 lg:text-start"
                   >
-                    A <span className="text-red-500">full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
+                    A <span className="">full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
                   </p>
 
-                  <ul className="flex justify-center md:justify-start mt-5 space-x-5">
+                  {/* <ul className="flex justify-center md:justify-start mt-5 space-x-5">
                     <li>
                       <a
                         href="https://www.linkedin.com/in/tebi-njeik"
@@ -175,14 +216,16 @@ export default function Layers() {
                         <div className="absolute top-full left-0 w-full h-full rounded-lg bg-gradient-to-bl from-purple-500 via-pink-500 to-yellow-500  hidden group-hover:block  z-0 transition-all duration-500 group-hover:top-0"></div>
                       </a>
                     </li>
-                  </ul>
+                  </ul> */}
                 </div>
               </div>
             </div>
           </div>
-          <div className="scroll-down">
-            Scroll down<div className="arrow"></div>
-          </div>
+        </div>
+        <div className="scroll-down">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </section>
       <section className="panel dark">ONE</section>
