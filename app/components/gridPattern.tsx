@@ -90,7 +90,7 @@ function Pattern({
       <rect width="100%" height="100%" fill={`url(#${id})`} strokeWidth="0" />
       <svg x="50%" y={yOffset} strokeWidth="0" className="overflow-visible">
         {staticBlocks.map((block) => (
-          <Block key={`${block}`} x={block[0]} y={block[1]} />
+          <Block key={`${block}`} x={block[0]-6} y={block[1]} />
         ))}
         {hoveredBlocks.map((block) => (
           <Block
@@ -116,9 +116,9 @@ function Pattern({
 
 export default function GridPattern() {
   return (
-    <motion.div className="absolute top-0 right-0 -z-10 h-full w-3/4 overflow-hidden pointer-events-none">
+    <motion.div className="absolute top-0 right-0 -z-10 h-full w-full overflow-hidden pointer-events-none">
       <Pattern
-        className="absolute -top-16 right-0 h-[1200px] w-full fill-blue-500/20 stroke-white/15 mask-[linear-gradient(to_bottom_left,white_30%,transparent_55%)]"
+        className="absolute -top-16 right-0 h-[1200px] w-full fill-blue-500/30 stroke-white/20 mask-[linear-gradient(to_bottom,white_30%,transparent_60%)]"
         yOffset={-96}
         interactive
       />

@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Grand_Hotel, Lato } from "next/font/google";
+import localFont from "next/font/local";
+import { Lato } from "next/font/google";
 import "./globals.css";
 import Loader from "./components/loader";
 import Navbar from "./components/navbar";
 
-const grandHotel = Grand_Hotel({
-  weight: "400",
-  variable: "--font-grand-hotel",
-  subsets: ["latin"],
+const achiko = localFont({
+  src: "./fonts/AchikoRegular.ttf",
+  variable: "--font-achiko",
 });
 
 const lato = Lato({
-  weight: ["300", "400", "700"],
+  weight: [ "400", "700"],
   variable: "--font-lato",
   subsets: ["latin"],
 });
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${grandHotel.variable} ${lato.variable} antialiased`}
+        className={`${achiko.variable} ${lato.variable} antialiased`}
       >
         <Loader />
         <Navbar />

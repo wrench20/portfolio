@@ -4,10 +4,12 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import { SplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
 import GridPattern from './components/gridPattern';
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, SplitText);
+import About from './components/about';
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, MorphSVGPlugin, SplitText);
 
 export default function Layers() {
   const main = useRef<HTMLElement | null>(null);
@@ -113,19 +115,118 @@ export default function Layers() {
           }
         });
       });
+
+      // Per-panel scrubbed tweens: the box arrives at each marker exactly
+      // when that panel fills the viewport (bottom bottom = pin moment).
+      // Animating x and y with different eases creates a natural arc.
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      const boxSize = 96;
+      const markerSize = 64;
+      const halfBox = boxSize / 2;
+      const halfMarker = markerSize / 2;
+
+      const boxCenterX = vw * 0.70;
+      const boxCenterY = vh * 0.10 + halfBox;
+
+      const markerCenters = [
+        { x: vw * 0.12 + halfMarker, y: vh * 0.35 + halfMarker },
+        { x: vw * 0.90 - halfMarker, y: vh * 0.40 + halfMarker },
+        { x: vw * 0.18 + halfMarker, y: vh * 0.50 + halfMarker },
+        { x: vw * 0.60 + halfMarker, y: vh * 0.60 + halfMarker },
+        { x: vw * 0.20 + halfMarker, y: vh * 0.70 + halfMarker },
+      ];
+
+      const pathPoints = markerCenters.map((m) => ({
+        x: m.x - boxCenterX,
+        y: m.y - boxCenterY,
+      }));
+
+      const morphShapes = [
+        'M48,2 C73.4,2,94,22.6,94,48 C94,73.4,73.4,94,48,94 C22.6,94,2,73.4,2,48 C2,22.6,22.6,2,48,2Z',
+        'M48,4 L92,88 L4,88Z',
+        'M48,2 L59.8,31.8 L91.7,33.8 L67,54.2 L75,85.2 L48,68 L21,85.2 L29,54.2 L4.3,33.8 L36.2,31.8Z',
+        'M48,2 L88,25 L88,71 L48,94 L8,71 L8,25Z',
+        'M34,4 L62,4 L62,34 L92,34 L92,62 L62,62 L62,92 L34,92 L34,62 L4,62 L4,34 L34,34Z',
+      ];
+
+      panels.slice(1).forEach((panel, i) => {
+        const prev = i === 0 ? { x: 0, y: 0 } : pathPoints[i - 1];
+        const cur = pathPoints[i];
+
+        const segTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: panel,
+            start: 'top bottom',
+            end: 'bottom bottom',
+            scrub: true,
+          },
+        });
+
+        segTl
+          .fromTo(
+            '.plot-box',
+            { x: prev.x },
+            { x: cur.x, ease: 'sine.inOut', immediateRender: false },
+            0,
+          )
+          .fromTo(
+            '.plot-box',
+            { y: prev.y },
+            { y: cur.y, ease: 'power2.in', immediateRender: false },
+            0,
+          )
+          .to(
+            '#plot-shape',
+            { morphSVG: morphShapes[i], ease: 'power2.inOut', immediateRender: false },
+            0,
+          );
+      });
     },
     { scope: main }
   );
 
   return (
     <main ref={main}>
+      {/* SVG that follows a curvy path through each panel's marker and morphs shape */}
+      <svg
+        className="plot-box fixed z-[9998] pointer-events-none will-change-transform"
+        style={{
+          left: 'calc(70% - 3rem)',
+          top: '10%',
+          filter: 'drop-shadow(0 0 15px rgba(56,189,248,0.5))',
+        }}
+        width="96"
+        height="96"
+        viewBox="0 0 96 96"
+        fill="none"
+        overflow="visible"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="plot-grad" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="50%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
+        <path
+          id="plot-shape"
+          d="M16,0 H80 C88.8,0,96,7.2,96,16 V80 C96,88.8,88.8,96,80,96 H16 C7.2,96,0,88.8,0,80 V16 C0,7.2,7.2,0,16,0Z"
+          fill="url(#plot-grad)"
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth="2"
+          strokeDasharray="6 4"
+        />
+      </svg>
       <section className="description panel dark relative">
         <GridPattern />
         <div className="section-content">
           <div className="section-inner">
             <div className="flex items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2 ">
               <div className="w-full h-full  mx-auto pt-8 lg:mt-28 sm:pt-12 relative flex justify-start">
-                <div className="flex justify-center flex-col gap-8 lg:grid lg:grid-cols-3  items-center place-items-center ">
+                <div className="flex justify-center flex-col gap-8 items-center place-items-center ">
                   <div className="flex justify-center col-span-1 items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
                     <div
                       className="relative group"
@@ -192,15 +293,15 @@ export default function Layers() {
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-4 col-span-2 text-center lg:text-left">
+                  <div className="space-y-4 col-span-2 text-center flex flex-col items-center justify-center ">
                     <div
 
                       className="space-y-2"
                     >
-                      <p className=" text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start">
+                      <p className=" text-3xl text-white sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold tracking-tight flex justify-center space-x-4 ">
                         Hi there, I&apos;m
                       </p>
-                      <span className="split-text title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight flex justify-center space-x-4 lg:justify-start bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text">
+                      <span className=" title relative text-blue-500 text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold  flex justify-center space-x-4  ">
                         Tebi Njeik
                       </span>
                     </div>
@@ -208,9 +309,9 @@ export default function Layers() {
 
                     <p
 
-                      className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 lg:text-start"
+                      className="text-base sm:text-lg lg:text-xl text-gray-400  md:w-3/5 pb-4 sm:pb-0 "
                     >
-                      A <span>full stack developer</span> with a passion for creating seamless user experiences and building scalable applications.
+                      An experienced and skilled Full-stack Developer from Cameroon with a passion for creating seamless user experiences and building scalable applications.
                     </p>
 
                     {/* <ul className="flex justify-center md:justify-start mt-5 space-x-5">
@@ -299,21 +400,31 @@ export default function Layers() {
         </div>
       </section>
       <section className="panel dark">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="plot-marker absolute left-[12%] top-[35%] w-16 h-16 rounded-xl border-2 border-dashed border-white/25" />
+        </div>
         <div className="section-content">
           <div className="section-inner">
-            <h1 className="split-text">ONE</h1>
            
+            <About />
           </div>
         </div>
       </section>
       <section className="panel purple">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="plot-marker absolute right-[10%] top-[40%] w-16 h-16 rounded-xl border-2 border-dashed border-white/25" />
+        </div>
         <div className="section-content">
           <div className="section-inner">
-            <h1 className="split-text">TWO</h1>
+            <h1 className="split-text">TWO </h1>
+
           </div>
         </div>
       </section>
       <section className="panel orange">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="plot-marker absolute left-[18%] top-[50%] w-16 h-16 rounded-xl border-2 border-dashed border-white/25" />
+        </div>
         <div className="section-content">
           <div className="section-inner">
             <h1 className="split-text">THREE</h1>
@@ -321,6 +432,9 @@ export default function Layers() {
         </div>
       </section>
       <section className="panel red">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="plot-marker absolute left-[60%] top-[60%] w-16 h-16 rounded-xl border-2 border-dashed border-white/25" />
+        </div>
         <div className="section-content">
           <div className="section-inner">
             <h1 className="split-text">FOUR</h1>
@@ -328,6 +442,9 @@ export default function Layers() {
         </div>
       </section>
       <section className="panel green">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="plot-marker absolute left-[20%] top-[70%] w-16 h-16 rounded-xl border-2 border-dashed border-white/25" />
+        </div>
         <div className="section-content">
           <div className="section-inner">
             <h1 className="split-text">FIVE</h1>
