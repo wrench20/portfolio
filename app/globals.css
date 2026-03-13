@@ -9,11 +9,6 @@
 
 /* ── Reset ── */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 /* ── Design tokens ── */
 
@@ -26,9 +21,10 @@
   --color-lilac: #9d95ff;
   --color-blue: #00b9e227;
   --color-pink: #fec5fb;
+  --color-white: #ffffff;
 
   --dark: var(--color-just-black);
-  --light: var(--color-surface-white);
+  --light: var(--color-white);
   --green: var(--color-shockingly-green);
   --purple: var(--color-lilac);
   --blue: var(--color-blue);
@@ -137,7 +133,15 @@ body {
 h1,
 h2,
 h3,
-h4,
+h4{
+  margin: 10px 0;
+  font-family: var(--font-achiko), cursive;
+  font-weight: 400;
+  line-height: 1.2;
+  
+}
+
+
 .title {
   margin: 10px 0;
   font-family: var(--font-achiko), cursive;
@@ -146,10 +150,7 @@ h4,
   text-shadow: 5px 10px 0 var(--color-blue);
 }
 
-h1, .h1 { font-size: var(--step-4); }
-h2, .h2 { font-size: var(--step-3); }
-h3, .h3 { font-size: var(--step-2); }
-h4, .h4, .lead { font-size: var(--step-1); }
+
 
 a {
   color: var(--green);
@@ -192,7 +193,7 @@ nav li a {
   height: 100vh;
   display: flex;
   justify-content: center;
-  text-align: center;
+text-align: center;
   position: relative;
   overflow: hidden;
   border-radius: 10px;
@@ -214,6 +215,10 @@ nav li a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.panel.light{
+  background-color: var(--light);
+  color: var(--dark);
 }
 
 .panel.dark {

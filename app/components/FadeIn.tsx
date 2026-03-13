@@ -19,7 +19,7 @@ export function FadeIn({ variants, viewportProp, ...props }: React.ComponentProp
 
   return (
     <motion.div
-      className="self-center"
+      className="self-center "
       variants={
         variants
           ? variants
